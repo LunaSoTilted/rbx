@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robux Pending Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Robux Pending Calculator</h1>
+
+    <label>Select when your Robux started pending:</label>
+
+    <div class="dropdowns">
+      <select id="month">
+        <option value="" disabled selected>Month</option>
+        <option value="0">January</option>
+        <option value="1">February</option>
+        <option value="2">March</option>
+        <option value="3">April</option>
+        <option value="4">May</option>
+        <option value="5">June</option>
+        <option value="6">July</option>
+        <option value="7">August</option>
+        <option value="8">September</option>
+        <option value="9">October</option>
+        <option value="10">November</option>
+        <option value="11">December</option>
+      </select>
+
+      <select id="day">
+        <option value="" disabled selected>Day</option>
+        <!-- 1 to 31 -->
+      </select>
+
+      <select id="hour">
+        <option value="" disabled selected>Hour</option>
+        <!-- 1 to 12 -->
+        <script>
+          for (let i = 1; i <= 12; i++) {
+            document.write(`<option value="${i}">${i.toString().padStart(2, '0')}</option>`);
+          }
+        </script>
+      </select>
+
+      <select id="minute">
+        <option value="" disabled selected>Minute</option>
+        <!-- 0 to 59 -->
+        <script>
+          for (let i = 0; i < 60; i++) {
+            document.write(`<option value="${i}">${i.toString().padStart(2, '0')}</option>`);
+          }
+        </script>
+      </select>
+
+      <select id="ampm">
+        <option value="" disabled selected>AM/PM</option>
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+    </div>
+
+    <button onclick="calculateDate()">Calculate</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // Populate day dropdown (1–31)
+    const daySelect = document.getElementById("day");
+    for (let d = 1; d <= 31; d++) {
+      daySelect.innerHTML += `<option value="${d}">${d}</option>`;
+    }
+
+    function calculateDate() {
+      const month = document.getElementById("month").value;
+      const day = document.getElementById("day").value;
+      let hour = document.getElementById("hour").value;
+      const minute = document.getElementById("minute").value;
+      const ampm = document.getElementById("ampm").value;
+      const resultDiv = document.getElementById("result");
+
+      if (!month || !day || !hour || !minute || !ampm) {
+        resultDiv.textContent = "⚠️ Please complete all fields.";
+        return;
+      }
+
+      hour = parseInt(hour);
+      if (ampm === "PM" && hour !== 12) {
+        hour += 12;
+      } else if (ampm === "AM" && hour === 12) {
+        hour = 0;
+      }
+
+      const currentYear = new Date().getFullYear();
+      const inputDate = new Date(currentYear, month, day, hour, minute);
+      const receivedDate = new Date(inputDate.getTime() + 5 * 24 * 60 * 60 * 1000);
+
+      const options = {
+        weekday: 'long', year: 'numeric', month: 'long',
+        day: 'numeric', hour: '2-digit', minute: '2-digit',
+        hour12: true
+      };
+
+      resultDiv.textContent = `✅ Robux should be received on: ${receivedDate.toLocaleString('en-US', options)}`;
+    }
+  </script>
+</body>
+</html>
